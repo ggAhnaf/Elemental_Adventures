@@ -1,3 +1,5 @@
+import player from './images/playerLOGO.webp';
+import enemy from './images/enemyLOGO.webp';
 import hydrogenImage from './images/hydrogen.jpg';
 import waterImage from './images/water.jpg';
 import sodiumImage from './images/sodium.jpg';
@@ -54,6 +56,8 @@ import sulfurtrioxideImage from './images/sulfurtrioxide.jpg';
 
 
 export const images = {
+    player: player,
+    enemy: enemy,
     hydrogen: hydrogenImage,
     water: waterImage,
     sodium: sodiumImage,

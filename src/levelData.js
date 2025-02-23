@@ -4,36 +4,35 @@ export const levels = [
       name: "Hold the wall!",
       objective: "Survive 5 More Turns",
       enemy: {
-        name: "Acid Monster",
+        name: "Demon Lord",
         health: 100,
         attack: 30,
+        shield: 50,
         weakness: ["base"], 
       },
     },
     {
       id: 2,
       name: "First Blood!",
-      objective: "Defeat the Acid Monster!",
+      objective: "Defeat the Demon Lord's Acid Monster!",
       enemy: {
         name: "Acid Monster",
-        health: 100,
+        health: 50,
         shield: 10,
-        attack: 10,
+        attack: 15,
         weakness: ["base"], 
       },
     },
     {
       id: 3,
       name: "The Alchemist's Challenge",
-      objective: "Craft and use Calcium Hydroxide to neutralize an acid attack",
-      requiredCrafts: ["calciumhydroxide"],
+      objective: "Defeat the Demon Lord",
       enemy: {
-        name: "Acid Golem",
-        health: 150,
+        name: "Demon Lord",
+        health: 100,
         attack: 20,
         weakness: ["base"],
       },
     },
-    // More levels can be added here
   ];
   

@@ -35,18 +35,65 @@ const reactionTable = {
     "calcium+oxygen": { id: "calciumoxide", title: "Calcium Oxide", text: "Solid Defence !", image: images.calciumoxide, effect: "shield", value: 18 },
     "magnesium+oxygen": { id: "magnesiumoxide", title: "Magnesium Oxide", text: "Solid Defence !", image: images.magnesiumoxide, effect: "shield", value: 20 }, 
 
-    "water+fluorine": { id: "hydrofluoricacid", title: "Hydrofluoric Acid", text: "Attack ! ", image: images.hydrofluoricacid, effect: "enemyHealth", value: -10 },
-    "water+chlorine": { id: "hydrochloricacid", title: "Hydrochloric Acid", text: "Attack ! ", image: images.hydrochloricacid, effect: "enemyHealth", value: -15 },
-    "water+nitrogendioxide": { id: "nitricacid", title: "Nitric Acid", text: "Attack ! ", image: images.nitricacid, effect: "enemyHealth", value: -20 },
-    "water+sulfurtrioxide": { id: "sulfuricacid", title: "Sulfuric Acid", text: "Attack ! ", image: images.sulfuricacid, effect: "enemyHealth", value: -25 }, 
+    "water+fluorine": { id: "hydrofluoricacid", title: "Hydrofluoric Acid", text: "Attack ! ", image: images.hydrofluoricacid, effect: "enemyHealth", value: -15 },
+    "water+chlorine": { id: "hydrochloricacid", title: "Hydrochloric Acid", text: "Attack ! ", image: images.hydrochloricacid, effect: "enemyHealth", value: -20 },
+    "water+nitrogendioxide": { id: "nitricacid", title: "Nitric Acid", text: "Attack ! ", image: images.nitricacid, effect: "enemyHealth", value: -25 },
+    "water+sulfurtrioxide": { id: "sulfuricacid", title: "Sulfuric Acid", text: "Attack ! ", image: images.sulfuricacid, effect: "enemyHealth", value: -30 }, 
     "sulfur+oxygen": { id: "sulfurtrioxide", title: "Sulfur Trioxide", text: "Attack ! ", image: images.sulfurtrioxide, effect: "enemyHealth", value: -8 },
     "nitrogen+oxygen": { id: "nitrogendioxide", title: "Nitrogen Dioxide", text: "Attack ! ", image: images.nitrogendioxide, effect: "enemyHealth", value: -6 },
 };
 
+
+const HomeScreen = ({ onStart }) => {
+  const [playerName, setPlayerName] = useState("");
+  const [favoriteElement, setFavoriteElement] = useState("");
+
+  return (
+    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-800 via-purple-600 to-pink-600 text-white">
+      <div className="bg-violet-900 text-gray-900 p-8 rounded-lg shadow-lg max-w-md text-center">
+        <h1 className="text-3xl font-bold mb-4 text-white">Welcome to Elemental Adventures!</h1>
+        <p className="mb-6 text-lg text-white">
+          "Chemistry is the magic of the universe. Let's uncover its secrets together!"
+        </p>
+
+        <input
+          type="text"
+          placeholder="Enter your name..."
+          value={playerName}
+          onChange={(e) => setPlayerName(e.target.value)}
+          className="w-full p-2 border rounded-md mb-4"
+        />
+
+        <input
+          type="text"
+          placeholder="Choose your favourite element!"
+          value={favoriteElement}
+          onChange={(e) => setFavoriteElement(e.target.value)}
+          className="w-full p-2 border rounded-md mb-4"
+        />
+
+        <button
+          className="mt-4 px-6 py-2 bg-gradient-to-b from-indigo-500 via-violet-800 via-75% to-indigo-700 text-white rounded-md hover:bg-green-600 transition"
+          onClick={() => onStart(playerName, favoriteElement)}
+        >
+          Start the Adventure
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const App = () => {
 
-    //player
-    const [playerName, setplayerName] = useState("Ahnaf");
+    const [showHomeScreen, setShowHomeScreen] = useState(true);
+    const [playerName, setPlayerName] = useState("");
+    const [favoriteElement, setFavoriteElement] = useState("");
+    
+    const handleStart = (name, element) => {
+      setPlayerName(name);
+      setFavoriteElement(element);
+      setShowHomeScreen(false);
+    };
 
     //turn
     const [turnCount, setTurnCount] = useState(0);
@@ -56,12 +103,13 @@ const App = () => {
       
       if (health > 0) {
         decreaseResource("health", -enemyAttack);
-        if ((health-enemyAttack) <= 0){
+        if ((health-enemyAttack && !showLevelComplete) <= 0){
           decreaseResource("health", -enemyAttack);
           handleLevelDefeat();
         }
       } else {handleLevelDefeat();}    
 
+      //addCardToInventory(availableCards[0]);  //need to fix a big where card is recognized but not added to inventory
       setTurnCount((prevTurn) => prevTurn + 1);
     };
 
@@ -88,13 +136,16 @@ const App = () => {
     const handleNextLevel = () => {
       setLevelComplete(false); 
       setTurnCount(0);
+      setHealth(100);
+      setShield(0);
+
 
       setCurrentLevel((prevLevel) => {
         const newLevel = prevLevel + 1;
         if (newLevel < levels.length) {
           setLevelName(levels[newLevel].name);
           setLevelObjective(levels[newLevel].objective);
-          setEnemyName(levels[newLevel].enemy.attack);
+          setEnemyName(levels[newLevel].enemy.name);
           setEnemyAttack(levels[newLevel].enemy.attack);
           setEnemyHealth(levels[newLevel].enemy.health);
           setEnemyShield(levels[newLevel].enemy.shield);
@@ -115,7 +166,7 @@ const App = () => {
     };
 
     const handleBackToMenu = () => {
-      // TODO Logic to go back to the main menu
+      setShowHomeScreen(true);
       setLevelDefeat(false); 
     };
     
@@ -127,24 +178,20 @@ const App = () => {
         }
       } else if (currentLevel === 1) {
         if (enemyHealth <= 0) {
+          setEnemyName();
           setEnemyAttack();
           setEnemyHealth();
           setEnemyShield();
           handleLevelComplete();
         }
+      }else if (currentLevel === 2) {
+        if (enemyHealth <= 0) {
+          handleLevelComplete();
+        }
       }
 
-    }, [turnCount], currentLevel); // Thiss effect runs whenever turnCount is updated
+    }, [turnCount, currentLevel, enemyHealth]); // Thiss effect runs whenever turnCount is updated
 
-    // State variables for determining colors
-    const [colorPlayer, setColorLeft] = useState('');
-    const [colorEnemy, setColorRight] = useState('');
-
-    //characters
-    useEffect(() => {
-      setColorLeft("bg-blue-500");
-      setColorRight('bg-red-500');
-    }, []);
   
 
     const applyEffect = (card) => {
@@ -164,16 +211,15 @@ const App = () => {
 
     //player resource bars
     const [health, setHealth] = useState(100);  // Health goes from 0 to 100
-    const [shield, setShield] = useState(0);  // Shield goes from 0 to 100
+    const [shield, setShield] = useState(10);  // Shield goes from 0 to 100
     const [purpleBar, setPurpleBar] = useState(0);  // Purple bar goes from 0 to 50
 
     const decreaseResource = (resource, value) => {
         if (resource === "health") {
           setHealth((prevHealth) => {
             let damageToHealth = (-value); //this is to ensure that positive damage values DECREASE health and shield
-            console.log("damage to health: ");  //for debugging purposes
             console.log({damageToHealth}); //for debugging purposes
-            console.log({shield}); //for debugging purposes
+            //console.log({shield}); //for debugging purposes
       
             if (shield > 0) {
               if (shield >= damageToHealth) {
@@ -292,35 +338,61 @@ const App = () => {
       availableCards[0], 
       availableCards[0], 
       availableCards[0], 
+      availableCards[0],
+      availableCards[0], 
+      availableCards[0], 
+      availableCards[0], 
+      availableCards[0], 
+      availableCards[1],
       availableCards[1],
       availableCards[2], 
+      availableCards[2],
+      availableCards[2],
+      availableCards[2],
+      availableCards[3],
       availableCards[3],
       availableCards[4], 
+      availableCards[4],
       availableCards[5],
       availableCards[6], 
       availableCards[7],
+      availableCards[7],
+      availableCards[7],
       availableCards[8], 
+      availableCards[8], 
+      availableCards[8],
+      availableCards[9],
+      availableCards[9],
+      availableCards[9],
+      availableCards[9],
       availableCards[9],
       availableCards[10], 
+      availableCards[10],
+      availableCards[11],
       availableCards[11],
     ]);
     
-    // Add card to inventory
     const addCardToInventory = (card) => {
       setInventory((prevInventory) => {
         // Check if the card already exists in the inventory
         const existingCardIndex = prevInventory.findIndex((item) => item.id === card.id);
+    
         if (existingCardIndex !== -1) {
           // If card exists, increment the quantity
           const updatedInventory = [...prevInventory];
           updatedInventory[existingCardIndex].quantity += 1;
+          console.log("Updated Inventory (after increment):", updatedInventory);  // Log to verify
           return updatedInventory;
         } else {
           // If card doesn't exist, add it with quantity 1
-          return [...prevInventory, { ...card, quantity: 1 }];
+          const updatedInventory = [...prevInventory, { ...card, quantity: 1 }];
+          console.log("Updated Inventory (after adding):", updatedInventory);  // Log to verify
+          return updatedInventory;
         }
       });
     };
+    
+    
 
     // Remove card from inventory
     const removeCardFromInventory = (card) => {
@@ -425,6 +497,8 @@ const App = () => {
 
     return (
       <div className='h-screen flex flex-col bg-slate-500'>
+          {showHomeScreen && <HomeScreen onStart={handleStart} />}
+          
 
           <div className="w-full h-[12vh] bg-slate-700 text-white flex flex-col items-center justify-center shadow-md">
             <h1 className="text-2xl font-bold">Level: {levelName}</h1>
@@ -492,24 +566,28 @@ const App = () => {
           {/* characters */}
           <div className="absolute top-4 left-0 w-full flex justify-between px-8">
           {/* Player Name (Left) */}
-          <h2 className="text-white font-bold text-xl bg-transparent">{playerName}</h2>
+          <h2 className="text-white font-bold text-xl bg-transparent">{playerName} of house {favoriteElement}</h2>
 
           {/* Enemy Name (Right) */}
           <h2 className="text-white font-bold text-xl bg-transparent">{enemyName}</h2>
         </div>
 
 
-          <div className="h-screen flex items-center justify-between px-5">
-            {/* Left circle */}
-            <div
-              className={`w-24 h-24 rounded-full ${colorPlayer} shadow-lg`}
-            ></div>
+        <div className="h-screen flex items-center justify-between px-5">
+        {/* Left Image (Player) */}
+        <img 
+          src={images.player} 
+          alt="Player" 
+          className="w-32 h-32 object-contain shadow-lg rounded-full"
+        />
 
-            {/* Right circle */}
-            <div
-              className={`w-24 h-24 rounded-full ${colorEnemy} shadow-lg`}
-            ></div>
-          </div>
+        {/* Right Image (Enemy) */}
+        <img 
+          src={images.enemy} 
+          alt="Enemy" 
+          className="w-32 h-32 object-contain shadow-lg rounded-full"
+        />
+</div>
 
           {/* Bottom Container with 3 Slots and Inventory */}
           <div className="bg-gray-800 p-6 mt-auto flex justify-between items-center">
