@@ -45,6 +45,9 @@ const reactionTable = {
 
 const App = () => {
 
+    //player
+    const [playerName, setplayerName] = useState("Ahnaf");
+
     //turn
     const [turnCount, setTurnCount] = useState(0);
 
@@ -91,6 +94,7 @@ const App = () => {
         if (newLevel < levels.length) {
           setLevelName(levels[newLevel].name);
           setLevelObjective(levels[newLevel].objective);
+          setEnemyName(levels[newLevel].enemy.attack);
           setEnemyAttack(levels[newLevel].enemy.attack);
           setEnemyHealth(levels[newLevel].enemy.health);
           setEnemyShield(levels[newLevel].enemy.shield);
@@ -167,13 +171,15 @@ const App = () => {
         if (resource === "health") {
           setHealth((prevHealth) => {
             let damageToHealth = (-value); //this is to ensure that positive damage values DECREASE health and shield
-            //console.log({damageToHealth});  //for debugging purposes
+            console.log("damage to health: ");  //for debugging purposes
+            console.log({damageToHealth}); //for debugging purposes
+            console.log({shield}); //for debugging purposes
       
             if (shield > 0) {
               if (shield >= damageToHealth) {
                 // If shield is enough to absorb all damage, reduce shield
-                setShield((prevShield) => prevShield - damageToHealth);
-                damageToHealth = 0; // No damage to health
+                setShield((prevShield) => (prevShield - damageToHealth));
+                damageToHealth = 0; // No damage will be done to health
               } else {
                 // If shield is less than the damage, absorb all shield damage
                 setShield((prevShield) => 0); // Shield is completely depleted
@@ -283,6 +289,8 @@ const App = () => {
     // Player's INVENTORY
     // Inventory (Cards the player has)
     const [inventory, setInventory] = useState([
+      availableCards[0], 
+      availableCards[0], 
       availableCards[0], 
       availableCards[1],
       availableCards[2], 
@@ -482,6 +490,14 @@ const App = () => {
           </div>
           
           {/* characters */}
+          <div className="absolute top-4 left-0 w-full flex justify-between px-8">
+          {/* Player Name (Left) */}
+          <h2 className="text-white font-bold text-xl bg-transparent">{playerName}</h2>
+
+          {/* Enemy Name (Right) */}
+          <h2 className="text-white font-bold text-xl bg-transparent">{enemyName}</h2>
+        </div>
+
 
           <div className="h-screen flex items-center justify-between px-5">
             {/* Left circle */}
@@ -576,35 +592,42 @@ const App = () => {
           </div>
 
 
-           {/* Card Selection Menu (Pop-up when selecting a slot) */}
-           {selectedSlot !== null && (
-                <div className="absolute bottom-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-                  <div className="bg-white p-4 rounded-lg shadow-lg w-100">
-                    <h2 className="text-lg font-bold mb-2">Select a Card</h2>
-                    <div className="grid grid-cols-3 gap-4 max-h-100 overflow-y-auto">
-                      {/* Display up to 12 cards from inventory */}
-                      {inventory.slice(0, 12).map((card) => (
-                        <div key={card.id} 
-                            className="w-40 h-56 bg-gray-200 rounded-lg shadow-md flex flex-col items-center cursor-pointer"
-                            onClick={() => assignCardToSlot(card)}
-                        >
-                          <img src={card.image} alt={card.title} className="w-32 h-32 mt-2 rounded-full" />
-                          <div className="mt-2 text-center px-2">
-                            <h3 className="font-bold">{card.title}</h3>
-                            <p className="text-gray-700">{card.text}</p>
-                          </div>
+          {/* Card Selection Menu (Pop-up when selecting a slot) */}
+          {selectedSlot !== null && (
+            <div className="absolute bottom-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-4 rounded-lg shadow-lg w-100">
+                <h2 className="text-lg font-bold mb-2">Select a Card</h2>
+                <div className="grid grid-cols-5 gap-4 max-h-100 overflow-y-auto">
+                  {/* Group unique cards and count duplicates, to save space in the menu*/}
+                  {Object.entries(
+                    inventory.reduce((acc, card) => {
+                      acc[card.id] = acc[card.id] ? { ...card, count: acc[card.id].count + 1 } : { ...card, count: 1 };
+                      return acc;
+                    }, {})
+                  )
+                    .slice(0, 15) 
+                    .map(([id, card]) => (
+                      <div
+                        key={id}
+                        className="w-40 h-56 bg-gray-200 rounded-lg shadow-md flex flex-col items-center cursor-pointer"
+                        onClick={() => assignCardToSlot(card)}
+                      >
+                        <img src={card.image} alt={card.title} className="w-32 h-32 mt-2 rounded-full" />
+                        <div className="mt-2 text-center px-2">
+                          <h3 className="font-bold">{card.title}</h3>
+                          <p className="text-gray-700">{card.text}</p>
+                          {card.count > 1 && <p className="text-sm text-gray-500">x{card.count}</p>} {/* Show count if >1 */}
                         </div>
-                      ))}
-                    </div>
-                    <button 
-                      className="mt-4 px-4 py-2 bg-red-500 text-white rounded" 
-                      onClick={() => setSelectedSlot(null)}
-                    >
-                      Cancel
-                    </button>
-                  </div>                    
+                      </div>
+                    ))}
                 </div>
-              )}
+                <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded" onClick={() => setSelectedSlot(null)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
 
               {/* Level Defeat Message Box */}
               {showLevelDefeat && (
