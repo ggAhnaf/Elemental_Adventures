@@ -3,7 +3,7 @@ import { images } from './exImage';
 
 export const availableCards = [    
     
-    { id: 'water', title: 'Water', text: 'Source of Life', image: images.water, effect: "Health", value: 20 },
+    { id: 'water', title: 'Water', text: 'Source of Life!  Hint: Water makes acid when mixed with reactive gases.', image: images.water, effect: "Health", value: 20 },
     { id: 'sodium', title: 'Sodium', text: 'I burn bright Yellow!', image: images.sodium },
     { id: 'chlorine', title: 'Chlorine', text: 'I am Green!.', image: images.chlorine },
     { id: 'magnesium', title: 'Magnesium', text: 'I burn White!', image: images.magnesium},

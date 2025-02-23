@@ -496,17 +496,20 @@ const App = () => {
     
 
     return (
-      <div className='h-screen flex flex-col bg-slate-500'>
+      <div style={{
+        backgroundImage: `url(${images.bgImage})`,
+      }}className='h-screen flex flex-col bg-images.bgImage bg-cover bg-center'>
+          
           {showHomeScreen && <HomeScreen onStart={handleStart} />}
           
 
-          <div className="w-full h-[12vh] bg-slate-700 text-white flex flex-col items-center justify-center shadow-md">
+          <div className="w-full h-[12vh] bg-slate-700 bg-opacity-85 text-white flex flex-col items-center justify-center shadow-md">
             <h1 className="text-2xl font-bold">Level: {levelName}</h1>
             <h2 className="text-lg text-gray-300">Objective: {levelObjective}</h2>
           </div>
 
           {/* Transparent container with bars */}
-          <div className="absolute top-16 left-0 w-1/2 p-2">
+          <div className="absolute top-16 left-0  w-[40%] p-2">
             <div className="space-y-1">
               {/* Health Bar */}
               <div className="w-full bg-red-900 border-2 border-black rounded-md h-6 relative shadow-lg">
@@ -578,19 +581,19 @@ const App = () => {
         <img 
           src={images.player} 
           alt="Player" 
-          className="w-32 h-32 object-contain shadow-lg rounded-full"
+          className="w-48 h-48 object-contain shadow-lg rounded-full mt-4"
         />
 
         {/* Right Image (Enemy) */}
         <img 
           src={images.enemy} 
           alt="Enemy" 
-          className="w-32 h-32 object-contain shadow-lg rounded-full"
+          className="w-48 h-48 object-contain shadow-lg rounded-full mt-4"
         />
 </div>
 
           {/* Bottom Container with 3 Slots and Inventory */}
-          <div className="bg-gray-800 p-6 mt-auto flex justify-between items-center">
+          <div className="bg-gray-800 bg-opacity-75 p-6 mt-auto flex justify-between items-center">
           {/* Card Slots */}
           <div className="flex space-x-4">
               {slots.map((card, index) => (
