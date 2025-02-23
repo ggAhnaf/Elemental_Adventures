@@ -3,39 +3,135 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { availableCards } from './cards'; 
 import { images } from './exImage';
+import { levels } from './levelData';
 
 const reactionTable = {
-    "sodium+chlorine": { id: "sodiumchloride", title: "Sodium Chloride", text: "Salt Wall !", image: images.sodium, effect: "shield", value: 20 },    
-    "lithium+chlorine": { id: "lithiumchloride", title: "Lithium Chloride", text: "Salt Wall !", image: "   ", effect: "shield", value: 10 },
-    "magnesium+chlorine": { id: "magnesiumchloride", title: "Magnesium Chloride", text: "Salt Wall !", image: "   ", effect: "shield", value: 12 },
-    "potassium+chlorine": { id: "potassiumchloride", title: "Potassium Chloride", text: "Salt Wall !", image: "   ", effect: "shield", value: 15  },
-    "calcium+chlorine": { id: "calciumchloride", title: "Calcium Chloride", text: "Salt Wall !", image: "   ", effect: "shield", value: 18 },
-    "lithium+fluorine": { id: "lithiumfluoride", title: "Lithium Fluoride", text: "Salt Wall !", image: "   ", effect: "shield", value: 10 },
-    "potassium+fluorine": { id: "potassiumfluoride", title: "Potassium Fluoride", text: "Salt Wall !", image: "   ", effect: "shield", value: 12 },
-    "sodium+fluorine": { id: "sodiumfluoride", title: "Sodium Fluoride", text: "Salt Wall !", image: "   ", effect: "shield", value: 15 },
-    "magnesium+fluorine": { id: "magnesiumfluoride", title: "Magnesium Fluoride", text: "Salt Wall !", image: "   ", effect: "shield", value: 18 },
-    "calcium+fluorine": { id: "calciumfluoride", title: "Calcium Fluoride", text: "Salt Wall !", image: "   ", effect: "shield", value: 20 },
-    "lithium+bromine": { id: "lithiumbromide", title: "Lithium Bromide", text: "Salt Wall !", image: "   ", effect: "shield", value: 10 },
-    "magnesium+bromine": { id: "magnesiumbromide", title: "Magnesium Bromide", text: "Salt Wall !", image: "   ", effect: "shield", value: 12 },
-    "calcium+bromine": { id: "calciumbromide", title: "Calcium Bromide", text: "Salt Wall !", image: "   ", effect: "shield", value: 15 },
-    "potassium+bromine": { id: "potassiumbromide", title: "Potassium Bromide", text: "Salt Wall !", image: "   ", effect: "shield", value: 18 },
-    "sodium+bromine": { id: "sodiumbromide", title: "Sodium Bromide", text: "Salt Wall !", image: "   ", effect: "shield", value: 20 },
-    "magnesium+nitrogen": { id: "magnesiumnitride", title: "Magnesium Nitride", text: "Salt Wall !", image: "   ", effect: "shield", value: 10 }, 
-    "lithium+nitrogen": { id: "lithiumnitride", title: "Lithium Nitride", text: "Salt Wall !", image: "   ", effect: "shield", value: 15 },
-    "calcium+nitrogen": { id: "calciumnitride", title: "Calcium Nitride", text: "Salt Wall !", image: "   ", effect: "shield", value: 20 },
-    "potassium+sulfur": { id: "potassiumsulfide", title: "Potassium Sulfide", text: "Salt Wall !", image: "   ", effect: "shield", value: 10 },
-    "lithium+sulfur": { id: "lithiumsulfide", title: "Lithium Sulfide", text: "Salt Wall !", image: "   ", effect: "shield", value: 12 },
-    "sodium+sulfur": { id: "sodiumsulfide", title: "Sodium Sulfide", text: "Salt Wall !", image: "   ", effect: "shield", value: 15 },
-    "magnesium+sulfur": { id: "magnesiumsulfide", title: "Magnesium Sulfide", text: "Salt Wall !", image: "   ", effect: "shield", value: 18 },
-    "calcium+sulfur": { id: "calciumsulfide", title: "Calcium Sulfide", text: "Salt Wall !", image: "   ", effect: "shield", value: 20 },
-    "potassium+oxygen": { id: "potassiumoxide", title: "Potassium Oxide", text: "Salt Wall !", image: "   ", effect: "shield", value: 10 },
-    "sodium+oxygen": { id: "sodiumoxide", title: "Sodium Oxide", text: "Salt Wall !", image: "   ", effect: "shield", value: 12 },
-    "lithium+oxygen": { id: "lithiumoxide", title: "Lithium Oxide", text: "Salt Wall !", image: "   ", effect: "shield", value: 15 },
-    "calcium+oxygen": { id: "calciumoxide", title: "Calcium Oxide", text: "Salt Wall !", image: "   ", effect: "shield", value: 18 },
-    "magnesium+oxygen": { id: "magnesiumoxide", title: "Magnesium Oxide", text: "Salt Wall !", image: "   ", effect: "shield", value: 20 },  
+    "sodium+chlorine": { id: "sodiumchloride", title: "Sodium Chloride", text: "Salt Wall !", image: images.sodiumchloride, effect: "shield", value: 20 },    
+    "lithium+chlorine": { id: "lithiumchloride", title: "Lithium Chloride", text: "Salt Wall !", image: images.lithiumchloride, effect: "shield", value: 10 },
+    "magnesium+chlorine": { id: "magnesiumchloride", title: "Magnesium Chloride", text: "Salt Wall !", image: images.magnesiumchloride, effect: "shield", value: 12 },
+    "potassium+chlorine": { id: "potassiumchloride", title: "Potassium Chloride", text: "Salt Wall !", image: images.potassiumchloride, effect: "shield", value: 15  },
+    "calcium+chlorine": { id: "calciumchloride", title: "Calcium Chloride", text: "Salt Wall !", image: images.calciumchloride, effect: "shield", value: 18 },
+    "lithium+fluorine": { id: "lithiumfluoride", title: "Lithium Fluoride", text: "Hold Them Back !", image: images.lithiumfluoride, effect: "shield", value: 10 },
+    "potassium+fluorine": { id: "potassiumfluoride", title: "Potassium Fluoride", text: "Hold Them Back  !", image: images.potassiumfluoride, effect: "shield", value: 12 },
+    "sodium+fluorine": { id: "sodiumfluoride", title: "Sodium Fluoride", text: "Hold Them Back  !", image: images.sodiumfluoride, effect: "shield", value: 15 },
+    "magnesium+fluorine": { id: "magnesiumfluoride", title: "Magnesium Fluoride", text: "Hold Them Back  !", image: images.magnesiumfluoride, effect: "shield", value: 18 },
+    "calcium+fluorine": { id: "calciumfluoride", title: "Calcium Fluoride", text: "Hold Them Back  !", image: images.calciumfluoride, effect: "shield", value: 20 },
+    "lithium+bromine": { id: "lithiumbromide", title: "Lithium Bromide", text: "Block Wall !", image: images.lithiumbromide, effect: "shield", value: 10 },
+    "magnesium+bromine": { id: "magnesiumbromide", title: "Magnesium Bromide", text: "Block Wall !", image: images.magnesiumbromide, effect: "shield", value: 12 },
+    "calcium+bromine": { id: "calciumbromide", title: "Calcium Bromide", text: "Block Wall !", image: images.calciumbromide, effect: "shield", value: 15 },
+    "potassium+bromine": { id: "potassiumbromide", title: "Potassium Bromide", text: "Block Wall !", image: images.potassiumbromide, effect: "shield", value: 18 },
+    "sodium+bromine": { id: "sodiumbromide", title: "Sodium Bromide", text: "Block Wall !", image: images.sodiumbromide, effect: "shield", value: 20 },
+    "magnesium+nitrogen": { id: "magnesiumnitride", title: "Magnesium Nitride", text: "Potent Barrier !", image: images.magnesiumnitride, effect: "shield", value: 10 }, 
+    "lithium+nitrogen": { id: "lithiumnitride", title: "Lithium Nitride", text: "Potent Barrier !", image: images.lithiumnitride, effect: "shield", value: 15 },
+    "calcium+nitrogen": { id: "calciumnitride", title: "Calcium Nitride", text: "Potent Barrier !", image: images.calciumnitride, effect: "shield", value: 20 },
+    "potassium+sulfur": { id: "potassiumsulfide", title: "Potassium Sulfide", text: "Noxious Barrier !", image: images.potassiumsulfide, effect: "shield", value: 10 },
+    "lithium+sulfur": { id: "lithiumsulfide", title: "Lithium Sulfide", text: "Noxious Barrier !", image: images.lithiumsulfide, effect: "shield", value: 12 },
+    "sodium+sulfur": { id: "sodiumsulfide", title: "Sodium Sulfide", text: "Noxious Barrier !", image: images.sodiumsulfide, effect: "shield", value: 15 },
+    "magnesium+sulfur": { id: "magnesiumsulfide", title: "Magnesium Sulfide", text: "Noxious Barrier !", image: images.magnesiumsulfide, effect: "shield", value: 18 },
+    "calcium+sulfur": { id: "calciumsulfide", title: "Calcium Sulfide", text: "Noxious Barrier !", image: images.calciumsulfide, effect: "shield", value: 20 },
+    "potassium+oxygen": { id: "potassiumoxide", title: "Potassium Oxide", text: "Solid Defence !", image: images.potassiumoxide, effect: "shield", value: 10 },
+    "sodium+oxygen": { id: "sodiumoxide", title: "Sodium Oxide", text: "Solid Defence !", image: images.sodiumoxide, effect: "shield", value: 12 },
+    "lithium+oxygen": { id: "lithiumoxide", title: "Lithium Oxide", text: "Solid Defence !", image: images.lithiumoxide, effect: "shield", value: 15 },
+    "calcium+oxygen": { id: "calciumoxide", title: "Calcium Oxide", text: "Solid Defence !", image: images.calciumoxide, effect: "shield", value: 18 },
+    "magnesium+oxygen": { id: "magnesiumoxide", title: "Magnesium Oxide", text: "Solid Defence !", image: images.magnesiumoxide, effect: "shield", value: 20 }, 
+
+    "water+fluorine": { id: "hydrofluoricacid", title: "Hydrofluoric Acid", text: "Attack ! ", image: images.hydrofluoricacid, effect: "enemyHealth", value: -10 },
+    "water+chlorine": { id: "hydrochloricacid", title: "Hydrochloric Acid", text: "Attack ! ", image: images.hydrochloricacid, effect: "enemyHealth", value: -15 },
+    "water+nitrogendioxide": { id: "nitricacid", title: "Nitric Acid", text: "Attack ! ", image: images.nitricacid, effect: "enemyHealth", value: -20 },
+    "water+sulfurtrioxide": { id: "sulfuricacid", title: "Sulfuric Acid", text: "Attack ! ", image: images.sulfuricacid, effect: "enemyHealth", value: -25 }, 
+    "sulfur+oxygen": { id: "sulfurtrioxide", title: "Sulfur Trioxide", text: "Attack ! ", image: images.sulfurtrioxide, effect: "enemyHealth", value: -8 },
+    "nitrogen+oxygen": { id: "nitrogendioxide", title: "Nitrogen Dioxide", text: "Attack ! ", image: images.nitrogendioxide, effect: "enemyHealth", value: -6 },
 };
 
 const App = () => {
+
+    //turn
+    const [turnCount, setTurnCount] = useState(0);
+
+    const handleFinishTurn = () => {
+      console.log({health, enemyAttack});
+      
+      if (health > 0) {
+        decreaseResource("health", -enemyAttack);
+        if ((health-enemyAttack) <= 0){
+          decreaseResource("health", -enemyAttack);
+          handleLevelDefeat();
+        }
+      } else {handleLevelDefeat();}    
+
+      setTurnCount((prevTurn) => prevTurn + 1);
+    };
+
+    //LEVELS
+    const [showLevelDefeat, setLevelDefeat] = useState(false);
+    const [showLevelComplete, setLevelComplete] = useState(false);
+    const [currentLevel, setCurrentLevel] = useState(0);
+    const [levelName, setLevelName] = useState(levels[currentLevel].name);
+    const [levelObjective, setLevelObjective] = useState(levels[currentLevel].objective);
+    const [enemyName, setEnemyName] = useState(levels[currentLevel].enemy.name);
+    const [enemyAttack, setEnemyAttack] = useState(levels[currentLevel].enemy.attack);    
+    const [enemyShield, setEnemyShield] = useState(levels[currentLevel].enemy.shield);
+    const [enemyHealth, setEnemyHealth] = useState(levels[currentLevel].enemy.health);
+    
+    const handleLevelDefeat = () => {
+      setLevelDefeat(true);  
+    };
+  
+
+    const handleLevelComplete = () => {
+      setLevelComplete(true);  
+    };
+  
+    const handleNextLevel = () => {
+      setLevelComplete(false); 
+      setTurnCount(0);
+
+      setCurrentLevel((prevLevel) => {
+        const newLevel = prevLevel + 1;
+        if (newLevel < levels.length) {
+          setLevelName(levels[newLevel].name);
+          setLevelObjective(levels[newLevel].objective);
+          setEnemyAttack(levels[newLevel].enemy.attack);
+          setEnemyHealth(levels[newLevel].enemy.health);
+          setEnemyShield(levels[newLevel].enemy.shield);
+          return newLevel;
+        }
+        return prevLevel; // If max level is reached, stay at the last level.
+      });
+    };
+
+    const handleRetry = () => {
+      setLevelComplete(false);  
+      setLevelDefeat(false);
+      setTurnCount(0);
+      setHealth(100);
+      setEnemyHealth(levels[currentLevel].enemy.health);
+      setEnemyShield(levels[currentLevel].enemy.shield);
+      
+    };
+
+    const handleBackToMenu = () => {
+      // TODO Logic to go back to the main menu
+      setLevelDefeat(false); 
+    };
+    
+    //Objectives
+    useEffect(() => {
+      if (currentLevel === 0) {
+        if (turnCount >= 5) {
+          handleLevelComplete();
+        }
+      } else if (currentLevel === 1) {
+        if (enemyHealth <= 0) {
+          setEnemyAttack();
+          setEnemyHealth();
+          setEnemyShield();
+          handleLevelComplete();
+        }
+      }
+
+    }, [turnCount], currentLevel); // Thiss effect runs whenever turnCount is updated
+
     // State variables for determining colors
     const [colorPlayer, setColorLeft] = useState('');
     const [colorEnemy, setColorRight] = useState('');
@@ -45,13 +141,7 @@ const App = () => {
       setColorLeft("bg-blue-500");
       setColorRight('bg-red-500');
     }, []);
-    
-
-    const [highlightedCard, setHighlightedCard] = useState(null);
-
-    const handleCardClick = (index) => {
-      setHighlightedCard(highlightedCard === index ? null : index); // Toggle the highlight
-    };
+  
 
     const applyEffect = (card) => {
       if (card && card.effect) {
@@ -60,27 +150,46 @@ const App = () => {
           decreaseResource("health", value); // Decreases health based on the card's value
         } else if (effect === "shield") {
           decreaseResource("shield", value); // Decreases shield based on the card's value
+        } else if (effect === "enemyHealth") {
+          decreaseEnemyResource("enemyHealth", value); // Decreases shield based on the card's value
+        } else if (effect === "enemyShield") {
+          decreaseEnemyResource("enemyShield", value); // Decreases shield based on the card's value
         }
       }
     };
 
     //player resource bars
-    const [health, setHealth] = useState(50);  // Health goes from 0 to 100
-    const [shield, setShield] = useState(50);  // Shield goes from 0 to 100
-    const [purpleBar, setPurpleBar] = useState(50);  // Purple bar goes from 0 to 50
+    const [health, setHealth] = useState(100);  // Health goes from 0 to 100
+    const [shield, setShield] = useState(0);  // Shield goes from 0 to 100
+    const [purpleBar, setPurpleBar] = useState(0);  // Purple bar goes from 0 to 50
 
     const decreaseResource = (resource, value) => {
-      if (resource === "health") {
-        setHealth((prevHealth) => {
-          const newHealth = prevHealth + value;
-          console.log(newHealth);
-          if (newHealth >= 100) {
-            return 100;
-          }
-          else {
-            return newHealth;
-          }
-        });
+        if (resource === "health") {
+          setHealth((prevHealth) => {
+            let damageToHealth = (-value); //this is to ensure that positive damage values DECREASE health and shield
+            //console.log({damageToHealth});  //for debugging purposes
+      
+            if (shield > 0) {
+              if (shield >= damageToHealth) {
+                // If shield is enough to absorb all damage, reduce shield
+                setShield((prevShield) => prevShield - damageToHealth);
+                damageToHealth = 0; // No damage to health
+              } else {
+                // If shield is less than the damage, absorb all shield damage
+                setShield((prevShield) => 0); // Shield is completely depleted
+                damageToHealth -= shield; // remaining damage to health counter
+              }
+            }
+      
+            // Apply remaining damage to health
+            const newHealth = prevHealth - damageToHealth;
+            console.log(newHealth);
+            if (newHealth <= 0) {
+              return 0; // Health cannot go below 0
+            } else {
+              return newHealth;
+            }
+          });        
       } else if (resource === "shield") {
         setShield((prevShield) => {
           const newShield = prevShield + value;
@@ -95,10 +204,58 @@ const App = () => {
       } else if (resource === "purpleBar") {
         setPurpleBar((prevPurpleBar) => {
           const newPurpleBar = prevPurpleBar + value;
-          return Math.min(Math.max(newPurpleBar, 0), 50);  // Prevents purpleBar from going below 0 and above 50
+          return Math.min(Math.max(newPurpleBar, 0), 50);  
         });
       }
     };
+
+    //enemy resource bars
+    
+    const decreaseEnemyResource = (resource, value) => {
+      if (resource === "enemyHealth") {
+        setEnemyHealth((prevHealth) => {
+          let damageToHealth = (-value); //this is to ensure that positive damage values DECREASE health and shield
+  
+          if (enemyShield > 0) {
+            if (enemyShield >= damageToHealth) {
+              // If shield is enough to absorb all damage, reduce enemy shield
+              setEnemyShield((prevShield) => prevShield - damageToHealth);
+              damageToHealth = 0; // No damage to health
+            } else {
+              // If shield is less than the damage, absorb all shield damage
+              setEnemyShield((prevShield) => 0); // Enemy's shield is depleted
+              damageToHealth -= enemyShield; // Remaining damage to enemy health count
+            }
+          }
+    
+          // Apply remaining damage to enemy health
+          const newHealth = prevHealth - damageToHealth;
+          console.log(newHealth);
+          if (newHealth <= 0) {
+            return 0; // Health cannot go below 0
+          } else {
+            return newHealth;
+          }
+        });
+      } else if (resource === "enemyShield") {
+        setEnemyShield((prevShield) => {
+          const newShield = prevShield + value;
+          console.log(newShield);
+          if (newShield >= 100) {
+            return 100;
+          }
+          else {
+            return newShield;
+          }
+        });
+      } else if (resource === "purpleBar") {
+        setPurpleBar((prevPurpleBar) => {
+          const newPurpleBar = prevPurpleBar + value;
+          return Math.min(Math.max(newPurpleBar, 0), 50);  
+        });
+      }
+    };
+    
         
     // Function to calculate the width of the bar based on value
     const calculateBarWidth = (value, maxValue) => {
@@ -260,8 +417,14 @@ const App = () => {
 
     return (
       <div className='h-screen flex flex-col bg-slate-500'>
+
+          <div className="w-full h-[12vh] bg-slate-700 text-white flex flex-col items-center justify-center shadow-md">
+            <h1 className="text-2xl font-bold">Level: {levelName}</h1>
+            <h2 className="text-lg text-gray-300">Objective: {levelObjective}</h2>
+          </div>
+
           {/* Transparent container with bars */}
-          <div className="absolute top-0 left-0 w-1/2 p-2">
+          <div className="absolute top-16 left-0 w-1/2 p-2">
             <div className="space-y-1">
               {/* Health Bar */}
               <div className="w-full bg-red-900 border-2 border-black rounded-md h-6 relative shadow-lg">
@@ -290,13 +453,13 @@ const App = () => {
           </div>
 
           {/* Transparent container with bars for enemy */}
-          <div className="absolute top-0 right-0 w-[30%] p-2">
+          <div className="absolute top-16 right-0 w-[30%] p-2">
             <div className="space-y-1 flex flex-col justify-end">
               {/* Enemy Health Bar */}
               <div className="w-full bg-red-900 border-2 border-black rounded-md h-6 relative shadow-lg">
                 <div
                   className="bg-gradient-to-b from-orange-600 via-red-800 via-75% to-red-700 h-full rounded-md absolute right-0"
-                  style={{ width: `${calculateBarWidth(health, 100)}%` }}
+                  style={{ width: `${calculateBarWidth(enemyHealth, 100)}%` }}
                 ></div>
               </div>
 
@@ -304,7 +467,7 @@ const App = () => {
               <div className="w-full bg-blue-800 border-2 border-blue-900 rounded-md h-5 relative shadow-lg">
                 <div
                   className="bg-gradient-to-b from-cyan-500 from-15% via-blue-600 via-75% to-blue-500 h-full rounded-md absolute right-0"
-                  style={{ width: `${calculateBarWidth(shield, 100)}%` }}
+                  style={{ width: `${calculateBarWidth(enemyShield, 100)}%` }}
                 ></div>
               </div>
 
@@ -339,7 +502,7 @@ const App = () => {
               {slots.map((card, index) => (
                 <div
                   key={index}
-                  className={`w-48 h-72 bg-white rounded-lg shadow-lg flex flex-col items-center cursor-pointer }`} // Add right margin to all but the third slot
+                  className={`w-48 h-72 bg-white rounded-lg shadow-lg flex flex-col items-center cursor-pointer }`} 
                   onClick={() => index !== 2 && setSelectedSlot(index)}
                 >
                   {card ? (
@@ -347,7 +510,7 @@ const App = () => {
                       <img
                         src={card.image}
                         alt={card.title}
-                        className="w-24 h-24 mt-4 rounded-full"
+                        className="w-36 h-36 mt-4"
                       />
                       <div className="mt-4 text-center px-2">
                         <h3 className="font-bold text-xl">{card.title}</h3>
@@ -362,6 +525,20 @@ const App = () => {
                 </div>
               ))}
           </div>
+              
+              {/* Finish Turn Button */}
+              <div className="bg-gray-700 p-4 rounded-lg shadow-md w-40 flex flex-col items-center space-y-3">
+                <h3 className="text-white font-bold text-lg">Turn</h3>
+                <div className="bg-gray-600 p-4 rounded-lg shadow-md w-32 flex flex-col items-center space-y-3">
+                  <h1 className="text-white text-8xl">{turnCount}</h1>
+                </div>
+                <button
+                  className="w-32 py-2 mb-2 rounded-md shadow transition-colors duration-100 bg-purple-500 hover:bg-purple-600 text-white"
+                  onClick={handleFinishTurn}
+                >
+                  Finish Turn
+                </button>
+              </div>
 
               {/* Inventory Section - Aligned to the Right */}
               <div className="bg-gray-700 p-4 rounded-lg shadow-md w-40 flex flex-col items-center space-y-3">
@@ -401,7 +578,7 @@ const App = () => {
 
            {/* Card Selection Menu (Pop-up when selecting a slot) */}
            {selectedSlot !== null && (
-                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                <div className="absolute bottom-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
                   <div className="bg-white p-4 rounded-lg shadow-lg w-100">
                     <h2 className="text-lg font-bold mb-2">Select a Card</h2>
                     <div className="grid grid-cols-3 gap-4 max-h-100 overflow-y-auto">
@@ -411,7 +588,7 @@ const App = () => {
                             className="w-40 h-56 bg-gray-200 rounded-lg shadow-md flex flex-col items-center cursor-pointer"
                             onClick={() => assignCardToSlot(card)}
                         >
-                          <img src={card.image} alt={card.title} className="w-24 h-24 mt-2 rounded-full" />
+                          <img src={card.image} alt={card.title} className="w-32 h-32 mt-2 rounded-full" />
                           <div className="mt-2 text-center px-2">
                             <h3 className="font-bold">{card.title}</h3>
                             <p className="text-gray-700">{card.text}</p>
@@ -426,6 +603,56 @@ const App = () => {
                       Cancel
                     </button>
                   </div>                    
+                </div>
+              )}
+
+              {/* Level Defeat Message Box */}
+              {showLevelDefeat && (
+                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md">
+                    <h2 className="text-2xl font-bold mb-4">Defeat!</h2>
+                    <p className="mb-6">You failed to complete the level!</p>
+
+                    <div className="flex justify-between gap-4">
+                      <button 
+                        className="px-6 py-2 bg-blue-500 text-white rounded-md"
+                        onClick={handleRetry} 
+                      >
+                        Retry
+                      </button>
+                      <button 
+                        className="px-6 py-2 bg-gray-500 text-white rounded-md"
+                        onClick={handleBackToMenu} 
+                      >
+                        Back to Menu
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Level Complete Message Box */}
+              {showLevelComplete && (
+                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md">
+                    <h2 className="text-2xl font-bold mb-4">Congratulations!</h2>
+                    <p className="mb-6">You've completed this level!</p>
+
+                    <div className="flex justify-between gap-4">
+                      <button 
+                        className="px-6 py-2 bg-blue-500 text-white rounded-md"
+                        onClick={handleNextLevel}
+                      >
+                        Next Level
+                      </button>
+                      <button 
+                        className="px-6 py-2 bg-red-500 text-white rounded-md"
+                        onClick={handleRetry}
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
 
